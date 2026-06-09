@@ -1,0 +1,23 @@
+{
+    "data": {
+        "magic": "APF_VER_1",
+        "data_slots": [
+            {
+                "name": "Zaxxon (Sega, 1982) ROM",
+                "id": 1,
+                "required": true,
+                "parameters": "0x108",
+                "filename": "zaxxon.rom",
+                "address": "0x00000000"
+            },
+            {
+                "name": "Zaxxon (Sega, 1982) Samples",
+                "id": 2,
+                "required": true,
+                "parameters": "0x108",
+                "filename": "zaxxon_samples.bin",
+                "address": "0x10000000"
+            }
+        ]
+    }
+}

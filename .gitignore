@@ -1,0 +1,19 @@
+# ── Development source — kept on local disk, NOT in the public distribution repo ─
+# This repo publishes ONLY the Pocket distribution (Cores/ Assets/ Platforms/).
+src/
+tools/
+*.py
+mister_source/
+quartus_build.log
+.claude/
+
+# ── Copyrighted ROMs / digitized samples — local only, NEVER committed ────────
+*.rom
+*.zip
+Assets/**/common/*.rom
+Assets/**/common/*.bin
+
+# ── Legacy build output ───────────────────────────────────────────────────────
+dist/
+*.log
+compile_log.txt
