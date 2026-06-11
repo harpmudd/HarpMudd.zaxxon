@@ -17,3 +17,7 @@ Assets/**/common/*.bin
 dist/
 *.log
 compile_log.txt
+
+# Python bytecode cache (regenerated whenever a *.py is imported)
+__pycache__/
+*.pyc
