@@ -355,10 +355,12 @@ end
 wire m_coin1  = cont1_key[14];
 wire m_start1 = cont1_key[15];
 wire m_start2 = cont2_key[15];
-// Zaxxon = aircraft-style altitude control: push UP on the stick to DIVE,
-// pull DOWN to CLIMB. Invert the d-pad Y axis so the Pocket matches the arcade.
-wire m_up     = cont1_key[1];   // physical DOWN -> game "up"   (climb)
-wire m_down   = cont1_key[0];   // physical UP   -> game "down" (dive)
+// Zaxxon/Super Zaxxon = aircraft-style altitude control: push UP on the stick to
+// DIVE, pull DOWN to CLIMB. Invert the d-pad Y axis so the Pocket matches the
+// arcade. Future Spy is a straight vertical shooter -> normal (non-inverted) Y
+// (mirrors MiSTer's mod_futurespy up/down swap).
+wire m_up     = mod_futurespy ? cont1_key[0] : cont1_key[1];
+wire m_down   = mod_futurespy ? cont1_key[1] : cont1_key[0];
 wire m_left   = cont1_key[2];
 wire m_right  = cont1_key[3];
 wire m_fire_a = cont1_key[4];

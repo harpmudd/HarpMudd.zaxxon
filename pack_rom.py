@@ -4,7 +4,7 @@ pack_rom.py - Build the HarpMudd Zaxxon Pocket core's data files (multi-game).
 One bitstream runs the Sega Zaxxon-hardware family the MiSTer core supports:
     variant 0 = Zaxxon        (mod_zaxxon)
     variant 1 = Super Zaxxon  (mod_superzaxxon - encrypted CPU ROMs, RTL decrypts)
-    variant 2 = Future Spy    (mod_futurespy)            [not built yet]
+    variant 2 = Future Spy    (mod_futurespy - encrypted CPU ROMs, RTL decrypts)
 A VARIANT BYTE stamped at 0x24200 is snooped by core_top.v -> mod_superzaxxon/
 mod_futurespy. The cpu/gfx/map ROM image is otherwise identical in layout; the
 loader forward is gated to dn_addr < 0x24200 so the byte never reaches zaxxon.vhd.
@@ -17,7 +17,7 @@ ROMs and samples are copyrighted -> both gitignored, never committed. Users buil
 them locally from their own MAME romset + MiSTer .mra.
 
 Usage:
-  python pack_rom.py [game]    # game = zaxxon szaxxon
+  python pack_rom.py [game]    # game = zaxxon szaxxon futspy
   python pack_rom.py all
 """
 
@@ -83,9 +83,34 @@ SZAXXON_ROM_DEFS = [
     (0xdeaa21f7,  256, "pr-5167.u72 (char color)",      0x24100),
 ]
 
+# Future Spy: encrypted CPU (315-5061, RTL decrypts). Same region bases, but its
+# sprite ROMs are 16K each (u77/u78/u79) and u79 is repeated once to fill the same
+# 64K sprite region (per the MiSTer .mra), vs Zaxxon's 8K ROMs doubled/quadrupled.
+FUTSPY_ROM_DEFS = [
+    (0x7578fe7f,  8192, "fs_snd.u27 (CPU prog 0, enc)",  0x00000),
+    (0x8ade203c,  8192, "fs_snd.u28 (CPU prog 1, enc)",  0x02000),
+    (0x734299c3,  4096, "fs_snd.u29 (CPU prog 2, enc)",  0x04000),
+    (0x305fae2d,  2048, "fs_snd.u68 (char bits 1)",      0x05000),
+    (0x3c5658c0,  2048, "fs_snd.u69 (char bits 2)",      0x05800),
+    (0x36d2bdf6,  8192, "fs_vid.u113 (bg bits 1)",       0x06000),
+    (0x3740946a,  8192, "fs_vid.u112 (bg bits 2)",       0x08000),
+    (0x4cd4df98,  8192, "fs_vid.u111 (bg bits 3)",       0x0A000),
+    (0x1b93c9ec, 16384, "fs_vid.u77 (sp bits 1)",        0x0C000),
+    (0x50e55262, 16384, "fs_vid.u78 (sp bits 2)",        0x10000),
+    (0xbfb02e3e, 16384, "fs_vid.u79 (sp bits 3 #0)",     0x14000),
+    (0xbfb02e3e, 16384, "fs_vid.u79 (sp bits 3 #1)",     0x18000),
+    (0x86da01f4,  8192, "fs_vid.u91 (map 1 lo)",         0x1C000),
+    (0x2bd41d2d,  8192, "fs_vid.u90 (map 1 hi)",         0x1E000),
+    (0xb82b4997,  8192, "fs_vid.u93 (map 2 lo)",         0x20000),
+    (0xaf4015af,  8192, "fs_vid.u92 (map 2 hi)",         0x22000),
+    (0x9ba2acaa,   256, "futrprom.u98 (palette)",        0x24000),
+    (0xf9e26790,   256, "futrprom.u72 (char color)",     0x24100),
+]
+
 GAMES = {
     "zaxxon":  (0, "Zaxxon (Set 1, Rev D)",   "Zaxxon (Set 1, Rev D).mra",   ZAXXON_ROM_DEFS),
     "szaxxon": (1, "Super Zaxxon (315-5013)", "Super Zaxxon (315-5013).mra", SZAXXON_ROM_DEFS),
+    "futspy":  (2, "Future Spy (315-5061)",   "Future Spy (315-5061).mra",   FUTSPY_ROM_DEFS),
 }
 
 

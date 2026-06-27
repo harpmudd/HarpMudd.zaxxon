@@ -6,10 +6,10 @@
                 "zaxxon"
             ],
             "shortname": "zaxxon",
-            "description": "Zaxxon and Super Zaxxon - Sega Zaxxon arcade hardware (Z80, digitized samples). Port by HarpMudd.",
+            "description": "Zaxxon, Super Zaxxon and Future Spy - Sega Zaxxon arcade hardware (Z80, digitized samples). Port by HarpMudd.",
             "author": "HarpMudd",
             "url": "",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "date_release": "2026-06-09"
         },
         "framework": {
