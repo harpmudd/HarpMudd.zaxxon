@@ -24,7 +24,7 @@
             {
                 "name": "Samples",
                 "id": 2,
-                "required": true,
+                "required": false,
                 "parameters": "0x108",
                 "extensions": [
                     "bin"

@@ -29,6 +29,7 @@
 		<part crc="a95e61fd" name="zaxxon_rom10.u93"></part>
 		<part crc="7e42691f" name="zaxxon_rom9.u92"></part>
 		<part crc="6cc6695b" name="mro16.u76"></part>
-		<part crc="deaa21f7" name="zaxxon.u72"></part>
+		<part crc="deaa21f7" name="pr-5167.u72"></part>
+		<part repeat="512"> 00 </part>
 	</rom>
 </misterromdescription>

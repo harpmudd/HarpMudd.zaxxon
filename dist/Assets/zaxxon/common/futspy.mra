@@ -1,0 +1,32 @@
+<misterromdescription>
+	<name>Future Spy</name>
+	<setname>futspy</setname>
+	<year>1984</year>
+	<manufacturer>Sega</manufacturer>
+	<!--
+	  HarpMudd Future Spy - Analogue Pocket core ROM recipe (no copyrighted data).
+	  Build:  mra futspy.mra   then copy the .rom into Assets/futspy/common/.
+	-->
+	<rom index="0" zip="futspy.zip" md5="none">
+		<part crc="7578fe7f" name="fs_snd.u27"></part>
+		<part crc="8ade203c" name="fs_snd.u28"></part>
+		<part crc="734299c3" name="fs_snd.u29"></part>
+		<part crc="305fae2d" name="fs_snd.u68"></part>
+		<part crc="3c5658c0" name="fs_snd.u69"></part>
+		<part crc="36d2bdf6" name="fs_vid.u113"></part>
+		<part crc="3740946a" name="fs_vid.u112"></part>
+		<part crc="4cd4df98" name="fs_vid.u111"></part>
+		<part crc="1b93c9ec" name="fs_vid.u77"></part>
+		<part crc="50e55262" name="fs_vid.u78"></part>
+		<part crc="bfb02e3e" name="fs_vid.u79"></part>
+		<part crc="bfb02e3e" name="fs_vid.u79"></part>
+		<part crc="86da01f4" name="fs_vid.u91"></part>
+		<part crc="2bd41d2d" name="fs_vid.u90"></part>
+		<part crc="b82b4997" name="fs_vid.u93"></part>
+		<part crc="af4015af" name="fs_vid.u92"></part>
+		<part crc="9ba2acaa" name="futrprom.u98"></part>
+		<part crc="f9e26790" name="futrprom.u72"></part>
+		<part repeat="1"> 02 </part>
+		<part repeat="511"> 00 </part>
+	</rom>
+</misterromdescription>

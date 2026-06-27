@@ -273,6 +273,16 @@ data_loader #(.ADDRESS_MASK_UPPER_4(4'h1), .ADDRESS_SIZE(19), .OUTPUT_WORD_SIZE(
     .write_en(samp_wr), .write_addr(samp_addr), .write_data(samp_data)
 );
 
+// -- Samples-present detect (the samples slot is OPTIONAL) --------------------
+// If the samples data slot loaded zero bytes (e.g. a ROM-only build via the mra
+// tool, no _samples.bin supplied), latch 0 and mute the audio below -- so the
+// core is cleanly SILENT instead of reading uninitialized SDRAM back as noise.
+// Set on the first sample byte written; stable long before reset releases.
+reg  samples_present_sdram = 1'b0;
+always @(posedge clk_sdram) if (samp_wr) samples_present_sdram <= 1'b1;
+wire samples_present_24;
+synch_3 s_samp (samples_present_sdram, samples_present_24, clk_24);
+
 // -- Reset (active high to zaxxon) -------------------------------------------
 wire reset_n_sys;
 synch_3 s_resetn (reset_n, reset_n_sys, clk_24);
@@ -452,16 +462,19 @@ assign video_hs           = vid_hs_r;
 reg  [8:0]  aud_div   = 9'd0;
 reg  signed [24:0] aud_acc_l = 0, aud_acc_r = 0;
 reg  [15:0] audio_l_s = 0, audio_r_s = 0;
+// Force silence when no samples were loaded (see samples_present_24 above).
+wire signed [15:0] aud_l_in = samples_present_24 ? $signed(audio_l_raw) : 16'sd0;
+wire signed [15:0] aud_r_in = samples_present_24 ? $signed(audio_r_raw) : 16'sd0;
 always @(posedge clk_24) begin
     aud_div <= aud_div + 1'd1;
     if (aud_div == 9'd0) begin
         audio_l_s <= aud_acc_l[24:9];
         audio_r_s <= aud_acc_r[24:9];
-        aud_acc_l <= $signed(audio_l_raw);
-        aud_acc_r <= $signed(audio_r_raw);
+        aud_acc_l <= aud_l_in;
+        aud_acc_r <= aud_r_in;
     end else begin
-        aud_acc_l <= aud_acc_l + $signed(audio_l_raw);
-        aud_acc_r <= aud_acc_r + $signed(audio_r_raw);
+        aud_acc_l <= aud_acc_l + aud_l_in;
+        aud_acc_r <= aud_acc_r + aud_r_in;
     end
 end
 
