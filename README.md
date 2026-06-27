@@ -1,7 +1,14 @@
-# Zaxxon (Sega, 1982) — Analogue Pocket
+# Zaxxon — Analogue Pocket
 
-An Analogue Pocket port of **Zaxxon** (Sega, 1982) by **HarpMudd**, built on the
-openFPGA framework.
+An Analogue Pocket port of Sega's **Zaxxon** arcade hardware by **HarpMudd**,
+built on the openFPGA framework. One core, two games selectable from the Pocket
+library:
+
+- **Zaxxon** — Sega, 1982
+- **Super Zaxxon** — Sega, 1982
+
+Both run from a single bitstream; a variant byte in each ROM image selects the
+game (Super Zaxxon uses encrypted CPU ROMs, decrypted in the core).
 
 ## The Game
 
@@ -57,13 +64,19 @@ is the first HarpMudd core to use Pocket SDRAM. Many thanks to the authors above
 
 ## ROMs
 
-ROMs are **not** included. Build the main ROM from the bundled `.mra` recipe in
-`Assets/zaxxon/common/` — it lists the required MAME romset files by name and
-CRC32, with no copyrighted data. Run it through the `mra` tool to produce
-`zaxxon.rom`, then keep it in that folder. **Note:** Zaxxon's digitized sound
-samples (`zaxxon_samples.bin`) are copyrighted audio *not* covered by the `.mra`;
-obtain them separately (see the MiSTer "Zaxxon" `.mra`) and place the file
-alongside `zaxxon.rom`.
+ROMs and samples are **not** included — nothing in this repo contains copyrighted
+data. Supply your own MAME romsets (`zaxxon`, `szaxxon`) and the corresponding
+MiSTer `.mra` files (for the samples), then run `pack_rom.py` to build the
+per-game files into `Assets/zaxxon/common/`:
+
+- `python pack_rom.py all` produces `zaxxon.rom` / `szaxxon.rom` (matched by CRC32)
+  **and** `zaxxon_samples.bin` / `szaxxon_samples.bin`.
+- The digitized sound **samples** are copyrighted audio extracted from each game's
+  MiSTer `.mra` (the `<rom index="2">` WAV blob); they are loaded into SDRAM at
+  runtime. They are never committed or distributed — you build them locally.
+
+Each game in the library is a small instance JSON in
+`Assets/zaxxon/HarpMudd.zaxxon/` that points at its `.rom` + `_samples.bin`.
 
 ## Credits
 

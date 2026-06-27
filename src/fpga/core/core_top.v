@@ -373,12 +373,27 @@ wire [1:0]  vid_b;
 wire        vid_hs, vid_vs, vid_hblank, vid_vblank, vid_ce;
 wire [15:0] audio_l_raw, audio_r_raw;
 
+// -- Variant select -----------------------------------------------------------
+// pack_rom stamps a variant byte at ROM image offset 0x24200 (well before the
+// padded end so the loader FIFO/rom_loaded race can't drop it):
+//   0 = Zaxxon   1 = Super Zaxxon   2 = Future Spy
+// Snooped off the load stream (clk_24). It never reaches zaxxon.vhd -- dl_wr below
+// is gated to dn_addr < 0x24200 -- and is stable before the CPU runs (game held in
+// reset until rom_loaded_24). Super Zaxxon / Future Spy also select the encrypted
+// CPU-ROM decode inside zaxxon.vhd via these mod lines.
+reg [7:0] variant_zx = 8'd0;
+always @(posedge clk_24)
+    if (dn_wr && !rom_loaded_24 && dn_addr == 18'h24200)
+        variant_zx <= dn_data;
+wire mod_superzaxxon = (variant_zx == 8'd1);
+wire mod_futurespy   = (variant_zx == 8'd2);
+
 zaxxon zaxxon_core (
     .clock_24      (clk_24),
     .reset         (game_reset),
     .pause         (1'b0),
-    .mod_superzaxxon(1'b0),
-    .mod_futurespy (1'b0),
+    .mod_superzaxxon(mod_superzaxxon),
+    .mod_futurespy (mod_futurespy),
 
     .video_r       (vid_r),
     .video_g       (vid_g),
@@ -401,7 +416,7 @@ zaxxon zaxxon_core (
     .sw1_input (sw1), .sw2_input (sw2),
     .service (1'b0), .flip_screen (1'b0),
 
-    .dl_addr (dn_addr), .dl_wr (dn_wr && !rom_loaded_24), .dl_data (dn_data),
+    .dl_addr (dn_addr), .dl_wr (dn_wr && !rom_loaded_24 && dn_addr < 18'h24200), .dl_data (dn_data),
 
     .wave_addr (wave_addr), .wave_rd (wave_rd), .wave_data (wave_data),
 

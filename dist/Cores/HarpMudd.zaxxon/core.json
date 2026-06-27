@@ -6,10 +6,10 @@
                 "zaxxon"
             ],
             "shortname": "zaxxon",
-            "description": "Zaxxon (Sega, 1982)",
+            "description": "Zaxxon and Super Zaxxon - Sega Zaxxon arcade hardware (Z80, digitized samples). Port by HarpMudd.",
             "author": "HarpMudd",
             "url": "",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "date_release": "2026-06-09"
         },
         "framework": {

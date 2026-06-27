@@ -31,6 +31,8 @@ __pycache__/
 *.zip
 *.hex
 *.mif
-
-# ── Local build staging (distribution is tracked at repo root, not dist/) ──
-dist/
+# Digitized sound samples (copyrighted audio, ~782 KB WAV blob -> SDRAM). Users
+# build these locally from their own MiSTer .mra via pack_rom.py. NOT the artwork
+# .bin (icon.bin / Platforms/_images/*.bin), which stay tracked.
+*_samples.bin
+*.wav
