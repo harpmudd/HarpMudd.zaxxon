@@ -24,13 +24,24 @@ Usage:
 import sys, os, re, zipfile, zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# Romsets: prefer the shared dev artifacts dir if it exists, otherwise this
-# repo folder -- a cloned user just drops their MAME .zip files next to this script.
-_DEV_ARTIFACTS = r"C:\Projects\Downloaded_Artifacts"
-DEFAULT_ZIP_DIR = _DEV_ARTIFACTS if os.path.isdir(_DEV_ARTIFACTS) else HERE
+# MAME romset .zip files. No machine-specific path is committed: set the
+# HARPMUDD_ROMS env var, drop the .zip files next to this script, or keep a
+# "Downloaded_Artifacts" folder beside the repo (dev convention).
+DEFAULT_ZIP_DIR = next(
+    (d for d in (os.environ.get("HARPMUDD_ROMS"),
+                 os.path.join(os.path.dirname(HERE), "Downloaded_Artifacts"))
+     if d and os.path.isdir(d)),
+    HERE)
 ASSETS_DIR      = os.path.join(HERE, "dist", "Assets", "zaxxon", "common")
-_DEV_MRA        = r"C:\Projects\Downloaded_Artifacts\Arcade-Zaxxon_MiSTer-master\releases"
-MRA_DIR         = _DEV_MRA if os.path.isdir(_DEV_MRA) else HERE
+# MiSTer Arcade-Zaxxon .mra (carry the digitized samples). Same resolution: the
+# HARPMUDD_MRA env var, the .mra next to this script, or the MiSTer releases dir
+# beside the repo.
+MRA_DIR = next(
+    (d for d in (os.environ.get("HARPMUDD_MRA"),
+                 os.path.join(os.path.dirname(HERE), "Downloaded_Artifacts",
+                              "Arcade-Zaxxon_MiSTer-master", "releases"))
+     if d and os.path.isdir(d)),
+    HERE)
 
 VARIANT_OFFSET = 0x24200
 ROM_IMAGE_SIZE = 0x24400          # 0x24200 data + variant byte + generous pad
