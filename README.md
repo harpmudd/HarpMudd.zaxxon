@@ -46,13 +46,14 @@ is the first HarpMudd core to use Pocket SDRAM. Many thanks to the authors above
 
 ## Controls
 
-| Pocket | Action |
-|---|---|
-| **D-Pad ↑ / ↓** | Dive / Climb (aircraft-style — see Notes) |
-| **D-Pad ← / →** | Steer left / right |
-| **A** | Fire |
-| **Start** | 1P Start |
-| **Select** | Insert coin |
+| Pocket | Zaxxon / Super Zaxxon | Future Spy |
+|---|---|---|
+| **D-Pad ↑ / ↓** | Dive / Climb (aircraft-style — see Notes) | Move up / down |
+| **D-Pad ← / →** | Steer left / right | Move left / right |
+| **A** | Fire | Fire |
+| **B** | — | Fire (2nd button) |
+| **Start** | 1P Start | 1P Start |
+| **Select** | Insert coin | Insert coin |
 
 ## Notes & Caveats
 
@@ -68,19 +69,30 @@ is the first HarpMudd core to use Pocket SDRAM. Many thanks to the authors above
 ## ROMs
 
 ROMs and samples are **not** included — nothing in this repo contains copyrighted
-data. Supply your own MAME romsets (`zaxxon`, `szaxxon`, `futspy`) and the corresponding
-MiSTer `.mra` files (for the samples), then run `pack_rom.py` to build the
-per-game files into `Assets/zaxxon/common/`:
+data. You build them yourself with `pack_rom.py`, which produces **both** the
+program/graphics ROM image **and** the digitized sound samples for each game.
 
-- `python pack_rom.py all` produces `zaxxon.rom` / `szaxxon.rom` / `futspy.rom`
-  (matched by CRC32) **and** `zaxxon_samples.bin` / `szaxxon_samples.bin` /
-  `futspy_samples.bin`.
-- The digitized sound **samples** are copyrighted audio extracted from each game's
-  MiSTer `.mra` (the `<rom index="2">` WAV blob); they are loaded into SDRAM at
-  runtime. They are never committed or distributed — you build them locally.
+**You need two things per game:**
+
+1. The **MAME romset** zip — `zaxxon`, `szaxxon`, `futspy` (program + graphics ROMs).
+2. The matching **MiSTer Arcade-Zaxxon `.mra`** — `Zaxxon (Set 1, Rev D).mra`,
+   `Super Zaxxon (315-5013).mra`, `Future Spy (315-5061).mra`. These carry the
+   digitized **samples** inline (the `<rom index="2">` WAV blob); the MAME romset
+   does not. Get them from the MiSTer Arcade-Zaxxon project:
+   <https://github.com/MiSTer-devel/Arcade-Zaxxon_MiSTer/tree/master/releases>.
+
+**Then:**
+
+- Drop those `.zip` and `.mra` files **next to `pack_rom.py`** (the repo root) and
+  run `python pack_rom.py all` (or one game, e.g. `python pack_rom.py futspy`).
+- It writes `zaxxon.rom` / `szaxxon.rom` / `futspy.rom` (matched by CRC32) **and**
+  `zaxxon_samples.bin` / `szaxxon_samples.bin` / `futspy_samples.bin` into
+  `dist/Assets/zaxxon/common/`.
+- The samples are copyrighted audio loaded into SDRAM at runtime — they are never
+  committed or distributed; you build them locally each time.
 
 Each game in the library is a small instance JSON in
-`Assets/zaxxon/HarpMudd.Zaxxon/` that points at its `.rom` + `_samples.bin`.
+`dist/Assets/zaxxon/HarpMudd.Zaxxon/` that points at its `.rom` + `_samples.bin`.
 
 ## Credits
 
