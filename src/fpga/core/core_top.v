@@ -377,7 +377,10 @@ wire m_fire_a = cont1_key[4];
 wire m_fire_b = cont1_key[5];
 
 wire [7:0] sw1 = 8'h7F;   // .mra DIP default
-wire [7:0] sw2 = 8'h33;   // 1c/1cr (hardcoded in MiSTer top)
+// Coinage DIP. Zaxxon/Super Zaxxon: 0x33 = 1C/1C. Future Spy uses a DIFFERENT
+// coinage table (MAME futspy: 0x00 = 1C/1C; 0x33 there = multi-credit), so it
+// needs its own value -- otherwise one coin registers several credits.
+wire [7:0] sw2 = mod_futurespy ? 8'h00 : 8'h33;
 
 // -- Zaxxon game core (clk_24) -----------------------------------------------
 wire [2:0]  vid_r, vid_g;
@@ -478,9 +481,17 @@ always @(posedge clk_24) begin
     end
 end
 
+// Gentle output gain (~1.25x, +~1.9 dB) with hard saturation so peaks can't wrap.
+wire signed [17:0] gain_l = $signed(audio_l_s) + ($signed(audio_l_s) >>> 2);
+wire signed [17:0] gain_r = $signed(audio_r_s) + ($signed(audio_r_s) >>> 2);
+wire [15:0] audio_l_o = (gain_l >  18'sd32767) ? 16'h7FFF :
+                        (gain_l < -18'sd32768) ? 16'h8000 : gain_l[15:0];
+wire [15:0] audio_r_o = (gain_r >  18'sd32767) ? 16'h7FFF :
+                        (gain_r < -18'sd32768) ? 16'h8000 : gain_r[15:0];
+
 sound_i2s #(.CHANNEL_WIDTH(16), .SIGNED_INPUT(1)) u_sound_i2s (
     .clk_74a(clk_74a), .clk_audio(clk_24),
-    .audio_l(audio_l_s), .audio_r(audio_r_s),
+    .audio_l(audio_l_o), .audio_r(audio_r_o),
     .audio_mclk(audio_mclk), .audio_dac(audio_dac), .audio_lrck(audio_lrck)
 );
 
