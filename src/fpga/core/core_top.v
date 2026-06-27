@@ -377,10 +377,8 @@ wire m_fire_a = cont1_key[4];
 wire m_fire_b = cont1_key[5];
 
 wire [7:0] sw1 = 8'h7F;   // .mra DIP default
-// Coinage DIP. Zaxxon/Super Zaxxon: 0x33 = 1C/1C. Future Spy uses a DIFFERENT
-// coinage table (MAME futspy: 0x00 = 1C/1C; 0x33 there = multi-credit), so it
-// needs its own value -- otherwise one coin registers several credits.
-wire [7:0] sw2 = mod_futurespy ? 8'h00 : 8'h33;
+wire [7:0] sw2 = 8'h33;   // 1c/1cr (hardcoded in MiSTer top). NOTE: Future Spy's
+                          // authentic factory default is 2 credits/coin -- left as-is.
 
 // -- Zaxxon game core (clk_24) -----------------------------------------------
 wire [2:0]  vid_r, vid_g;
