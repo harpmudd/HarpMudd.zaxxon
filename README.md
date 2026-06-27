@@ -80,7 +80,7 @@ per-game files into `Assets/zaxxon/common/`:
   runtime. They are never committed or distributed — you build them locally.
 
 Each game in the library is a small instance JSON in
-`Assets/zaxxon/HarpMudd.zaxxon/` that points at its `.rom` + `_samples.bin`.
+`Assets/zaxxon/HarpMudd.Zaxxon/` that points at its `.rom` + `_samples.bin`.
 
 ## Credits
 
